@@ -41,3 +41,32 @@ export const getUserById = (req, res) => {
 
   res.status(200).json(user);
 };
+
+// Creates a new user from the JSON body
+export const createUser = (req, res) => {
+  // req.body is undefined when the Content-Type header is not JSON
+  const { name, age, city } = req.body ?? {};
+
+  // Minimal manual check: the three fields are required
+  if (!name || age === undefined || !city) {
+    return res.status(400).json({
+      message: "Fields name, age and city are required",
+    });
+  }
+
+  // The id is generated here, like a database would
+  const nextId =
+    users.length > 0 ? Math.max(...users.map((user) => user.id)) + 1 : 1;
+
+  const newUser = {
+    id: nextId,
+    name,
+    age: Number(age),
+    city,
+  };
+
+  // push mutates the array, it never reassigns the imported binding
+  users.push(newUser);
+
+  res.status(201).json(newUser);
+};
