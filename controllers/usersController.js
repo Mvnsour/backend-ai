@@ -70,3 +70,22 @@ export const createUser = (req, res) => {
 
   res.status(201).json(newUser);
 };
+
+// Deletes a user by id
+export const deleteUser = (req, res) => {
+  const id = Number(req.params.id);
+
+  // findIndex returns the position in the array, or -1 when there is no match
+  const index = users.findIndex((user) => user.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({
+      message: `User with id ${id} not found`,
+    });
+  }
+
+  // splice removes in place and returns an array of the removed items
+  const [deletedUser] = users.splice(index, 1);
+
+  res.status(200).json(deletedUser);
+};

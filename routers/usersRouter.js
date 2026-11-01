@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createUser,
+  deleteUser,
   getAllUsers,
   getUserById,
 } from "../controllers/usersController.js";
@@ -13,5 +14,8 @@ router.get("/:id", getUserById);
 
 // POST is used to create a new resource, in this case a user
 router.post("/", createUser);
+
+// DELETE removes the resource identified by the id
+router.delete("/:id", deleteUser);
 
 export default router;
