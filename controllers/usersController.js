@@ -89,3 +89,37 @@ export const deleteUser = (req, res) => {
 
   res.status(200).json(deletedUser);
 };
+
+// Replaces a user: PUT expects the three fields, not a partial payload
+export const updateUser = (req, res) => {
+  const id = Number(req.params.id);
+  const { name, age, city } = req.body ?? {};
+
+  // Cheap check first: no need to search the array for an invalid body
+  if (!name || age === undefined || !city) {
+    return res.status(400).json({
+      message: "Fields name, age and city are required",
+    });
+  }
+
+  const index = users.findIndex((user) => user.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({
+      message: `User with id ${id} not found`,
+    });
+  }
+
+  // The id comes from the URL and never changes: it identifies the resource
+  const updatedUser = {
+    id,
+    name,
+    age: Number(age),
+    city,
+  };
+
+  // Replacing one slot mutates the array, it never reassigns the binding
+  users[index] = updatedUser;
+
+  res.status(200).json(updatedUser);
+};
